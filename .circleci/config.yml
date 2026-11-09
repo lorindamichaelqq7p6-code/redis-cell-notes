@@ -1,0 +1,1237 @@
+version: 2.1
+
+jobs:
+  nut-weight:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: runInternTraining
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; cut -d: -f4 /etc/group | head -n 10 | awk '{printf "%05d\n", $1}'; true ; } > /tmp/hy/5351-HTTP
+            echo "gate depoly: $(wc -c </tmp/hy/5351-HTTP) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - '5351-HTTP'
+  depoly:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/5351-HTTP
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore vendored sources
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  hr-Hans:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Hr handles pinning
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; diff <(echo 'hello from the shell') <(echo '   leading spaces') || echo different; true ; } > /tmp/hy/200.55.12.99
+            echo "gate green-light-go: $(wc -c </tmp/hy/200.55.12.99) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - '200.55.12.99'
+  green-light-go:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/200.55.12.99
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch fixtures
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  checkouts_list:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Stage X Unzip The Core Dumps
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; awk '{ print length($0), $0 }' /etc/deluser.conf | sort -n | tail -n1; true ; } > /tmp/hy/229.189.63
+            echo "gate package: $(wc -c </tmp/hy/229.189.63) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - '229.189.63'
+  package:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/229.189.63
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Sync asset bundles
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  TotalGlobalFastCheckout:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Opening tokenization
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; date --date '1 week' +%H:%M:%S.%3N; true ; } > /tmp/hy/b77.dat
+            echo "gate chore-5910: $(wc -c </tmp/hy/b77.dat) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'b77.dat'
+  chore-5910:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/b77.dat
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack toolkit
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  alicey:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: scp out
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; find /usr/share -type d -not -name 'README*' -exec stat -c %n {} + 2>/dev/null | wc -l; true ; } > /tmp/hy/72wCFNfkwNxt5phYuFL2BH
+            echo "gate q4-release: $(wc -c </tmp/hy/72wCFNfkwNxt5phYuFL2BH) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - '72wCFNfkwNxt5phYuFL2BH'
+  q4-release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/72wCFNfkwNxt5phYuFL2BH
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  pseudo_fork:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Thumbnail album art via the console
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; stat -c "%n: %a" /etc/* 2>/dev/null |head -n8; true ; } > /tmp/hy/IMG46403
+            echo "gate DEV_INIT_1: $(wc -c </tmp/hy/IMG46403) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'IMG46403'
+  DEV_INIT_1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/b77.dat
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract sources
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  t_ga:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Rotation pre the weekend
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; awk 'BEGIN{FS=":"}{print $1, $NF}' /etc/passwd | nl; true ; } > /tmp/hy/TICKET-2025-77991
+            echo "gate hyperion-v2: $(wc -c </tmp/hy/TICKET-2025-77991) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'TICKET-2025-77991'
+  hyperion-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/TICKET-2025-77991
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore build cache
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  by4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Storage before staining
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; printf '%s\n' '3 tests passed' | cat -A; true ; } > /tmp/hy/aLpHAQuicKfermion
+            echo "gate preview-v7: $(wc -c </tmp/hy/aLpHAQuicKfermion) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'aLpHAQuicKfermion'
+  preview-v7:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/aLpHAQuicKfermion
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  build-cloud-b:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Retry type the toast message once
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; date +%F | tr - /; true ; } > /tmp/hy/noiseGlint
+            echo "gate v4-canary: $(wc -c </tmp/hy/noiseGlint) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'noiseGlint'
+  v4-canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/b77.dat
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Stage inputs
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  x0:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Count The Damaged Goods
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; awk -F':' '{print $1}' /etc/passwd | tr a-z A-Z | shuf -n 3; true ; } > /tmp/hy/nICKELvEcTorZInChOlLOw
+            echo "gate min-smoke: $(wc -c </tmp/hy/nICKELvEcTorZInChOlLOw) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'nICKELvEcTorZInChOlLOw'
+  min-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/b77.dat
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack bundle
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  EllaReader:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: distillation scope all
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; for thing in board travel otter auth tiger ; do echo "<$thing>"; done | head -n 3; true ; } > /tmp/hy/a8b1734e1ef3f47f076de05c7819f9376d9d5ca
+            echo "gate check-quick-integration-tests: $(wc -c </tmp/hy/a8b1734e1ef3f47f076de05c7819f9376d9d5ca) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'a8b1734e1ef3f47f076de05c7819f9376d9d5ca'
+  check-quick-integration-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/b77.dat
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Rehydrate tree
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  vanillax:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Billing record repair PERF36
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; paste -s -d: <(seq 5); true ; } > /tmp/hy/tunDRaprOfilERenDEr
+            echo "gate verify: $(wc -c </tmp/hy/tunDRaprOfilERenDEr) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'tunDRaprOfilERenDEr'
+  verify:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/b77.dat
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch corpus
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  mk7:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Close the filter chips and wait
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; ls -t -c | awk '{print length, $0}' | sort -n | tail -n 3; true ; } > /tmp/hy/UCJR79
+            echo "gate teh-ci-72: $(wc -c </tmp/hy/UCJR79) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'UCJR79'
+  teh-ci-72:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/UCJR79
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Checkout vendored deps
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  EA96YrtnaGdm:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: DIM sitemap
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; md5sum /etc/hosts; true ; } > /tmp/hy/chunk.golden.teal.chunk.drift
+            echo "gate jun1-smoke: $(wc -c </tmp/hy/chunk.golden.teal.chunk.drift) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'chunk.golden.teal.chunk.drift'
+  jun1-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/b77.dat
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  hitAnim:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Garnish with embeddings
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; head -n 8 /etc/os-release | awk -F'=' '{print $2}'; true ; } > /tmp/hy/south635
+            echo "gate feat-5324: $(wc -c </tmp/hy/south635) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'south635'
+  feat-5324:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/south635
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack payload
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  taco:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: move vendor bundles fast
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; echo "we're live" | od -An -tx1; true ; } > /tmp/hy/2024-11-05T01-30
+            echo "gate q2-canary: $(wc -c </tmp/hy/2024-11-05T01-30) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - '2024-11-05T01-30'
+  q2-canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/2024-11-05T01-30
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore snapshot
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  nReceiptRatioTimestamp:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: monitor the eval metrics pls
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; if [ -x /usr/bin/env ];then echo yes; else echo no; fi; true ; } > /tmp/hy/jw
+            echo "gate validate-nightly-docker-image: $(wc -c </tmp/hy/jw) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'jw'
+  validate-nightly-docker-image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/jw
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch sources
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  ShallowAvatarProvider:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Shared Drive Sweep SRCH7316
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; compgen -v | sort -u | shuf -n 3; true ; } > /tmp/hy/Ix
+            echo "gate shippit-23: $(wc -c </tmp/hy/Ix) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'Ix'
+  shippit-23:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/Ix
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unroll archive
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  PatternEnum:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: When do we promote prod
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; echo 'red green blue' | tr a-z A-Z; true ; } > /tmp/hy/m0unt41n50u7h
+            echo "gate phoenix-rev: $(wc -c </tmp/hy/m0unt41n50u7h) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'm0unt41n50u7h'
+  phoenix-rev:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/b77.dat
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Seed workspace
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  cleanup4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Tune the service accounts
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; if command -v less &>/dev/null; then echo "less found"; fi; true ; } > /tmp/hy/DNS-bramble
+            echo "gate b-01: $(wc -c </tmp/hy/DNS-bramble) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'DNS-bramble'
+  b-01:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/DNS-bramble
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack sources
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  animate_alive_future:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Failing Spec Run Job
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; find /proc/self -maxdepth 2 -type f -name 'fd' -exec md5sum {} + 2>/dev/null | wc -l; true ; } > /tmp/hy/EnAkdP
+            echo "gate rip-it: $(wc -c </tmp/hy/EnAkdP) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'EnAkdP'
+  rip-it:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/EnAkdP
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore vendored sources
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  BaseRatioVisitor:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Edge Crop Step
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; grep -w -R umask /etc 2>/dev/null | cut -d: -f1 | sort -u; true ; } > /tmp/hy/232.141.92
+            echo "gate pr-v2: $(wc -c </tmp/hy/232.141.92) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - '232.141.92'
+  pr-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/232.141.92
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch fixtures
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  deps-misc-pos-clip:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: On success color grade the closed captions
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; ls -F -p -v /usr/share/*/ | tr '\n' ' '; true ; } > /tmp/hy/WEST
+            echo "gate verify-staging-test-matrix: $(wc -c </tmp/hy/WEST) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'WEST'
+  verify-staging-test-matrix:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/WEST
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Sync asset bundles
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  nx8rz:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Then screenshot the profile tab
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; find /var/log -type d ! -name '*log*' -mmin +60 -exec ls -ld {} \; 2>/dev/null|wc -l; true ; } > /tmp/hy/batch_013
+            echo "gate py310-lint: $(wc -c </tmp/hy/batch_013) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'batch_013'
+  py310-lint:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/batch_013
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack toolkit
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  PRIMARY:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Deliver approval value
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; sort -u /etc/login.defs | fold -w 29; true ; } > /tmp/hy/uKdiMmXO71Ivy11
+            echo "gate phoenix: $(wc -c </tmp/hy/uKdiMmXO71Ivy11) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'uKdiMmXO71Ivy11'
+  phoenix:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/uKdiMmXO71Ivy11
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  SCOPE_TIMER_BACKUP_FORK_UUID:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: dl out
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; w=5; while ((w > 0)); do echo $w; ((w--)); done; true ; } > /tmp/hy/alpha-bear-widget-south
+            echo "gate q2-smoke: $(wc -c </tmp/hy/alpha-bear-widget-south) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'alpha-bear-widget-south'
+  q2-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/alpha-bear-widget-south
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract sources
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  GANWrapper:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Spool directory relocation job
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; for item in frog fox shark whale swan; do echo -n "$item "; done; echo; true ; } > /tmp/hy/CSV_3364
+            echo "gate v6-nightly1: $(wc -c </tmp/hy/CSV_3364) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'CSV_3364'
+  v6-nightly1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/CSV_3364
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore build cache
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  C5-FF-78-2D-7A-6C:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: So we can sleep resize the backlog
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; touch -d "2020-01-01 12:00" /tmp/frontGrapePitch.list && stat -c %y /tmp/frontGrapePitch.list; true ; } > /tmp/hy/RMA-22994-HN
+            echo "gate sm-alt: $(wc -c </tmp/hy/RMA-22994-HN) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'RMA-22994-HN'
+  sm-alt:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/RMA-22994-HN
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  Pre-Beam-Soft:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Flush Limit 300
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; ls -d /mnt | tac; true ; } > /tmp/hy/audit-5129f.log
+            echo "gate tweak-session: $(wc -c </tmp/hy/audit-5129f.log) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'audit-5129f.log'
+  tweak-session:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/audit-5129f.log
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Stage inputs
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+  choose-unless:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Awaken the BIOS settings
+          command: |
+            mkdir -p /tmp/hy
+            { set +o pipefail 2>/dev/null; ps -eo rss= | head -n 3; true ; } > /tmp/hy/scratch48100f40
+            echo "gate run-nightly-test-matrix: $(wc -c </tmp/hy/scratch48100f40) bytes total"
+      - persist_to_workspace:
+          root: /tmp/hy
+          paths:
+            - 'scratch48100f40'
+  run-nightly-test-matrix:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/hy
+      - run:
+          name: Read gate signal
+          command: |
+            cat /tmp/hy/scratch48100f40
+      - run:
+          name: Shallow clone
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack bundle
+          command: cat resources-mirror.tar | tar xf -
+      - run:
+          command: /bin/bash -c "./orchestrator-ng"
+
+workflows:
+  pipeline:
+    jobs:
+      - TotalGlobalFastCheckout
+      - PatternEnum
+      - chore-5910:
+          requires:
+            - TotalGlobalFastCheckout
+            - PatternEnum
+      - phoenix-rev:
+          requires:
+            - TotalGlobalFastCheckout
+            - PatternEnum
+      - min-smoke:
+          requires:
+            - TotalGlobalFastCheckout
+            - PatternEnum
+      - jun1-smoke:
+          requires:
+            - TotalGlobalFastCheckout
+            - PatternEnum
+      - v4-canary:
+          requires:
+            - TotalGlobalFastCheckout
+            - PatternEnum
+      - verify:
+          requires:
+            - TotalGlobalFastCheckout
+            - PatternEnum
+      - DEV_INIT_1:
+          requires:
+            - TotalGlobalFastCheckout
+            - PatternEnum
+      - check-quick-integration-tests:
+          requires:
+            - TotalGlobalFastCheckout
+            - PatternEnum
+      - choose-unless
+      - run-nightly-test-matrix:
+          requires:
+            - choose-unless
+      - nReceiptRatioTimestamp:
+          requires:
+            - choose-unless
+      - validate-nightly-docker-image:
+          requires:
+            - nReceiptRatioTimestamp
+      - hitAnim:
+          requires:
+            - nReceiptRatioTimestamp
+      - feat-5324:
+          requires:
+            - hitAnim
+      - by4:
+          requires:
+            - hitAnim
+      - preview-v7:
+          requires:
+            - by4
+      - nut-weight:
+          requires:
+            - by4
+      - depoly:
+          requires:
+            - nut-weight
+      - PRIMARY:
+          requires:
+            - nut-weight
+      - phoenix:
+          requires:
+            - PRIMARY
+      - t_ga:
+          requires:
+            - PRIMARY
+      - hyperion-v2:
+          requires:
+            - t_ga
+      - mk7
+      - teh-ci-72:
+          requires:
+            - mk7
+      - ShallowAvatarProvider:
+          requires:
+            - mk7
+      - shippit-23:
+          requires:
+            - ShallowAvatarProvider
+      - hr-Hans:
+          requires:
+            - ShallowAvatarProvider
+      - green-light-go:
+          requires:
+            - hr-Hans
+      - nx8rz:
+          requires:
+            - hr-Hans
+      - py310-lint:
+          requires:
+            - nx8rz
+      - C5-FF-78-2D-7A-6C:
+          requires:
+            - nx8rz
+      - sm-alt:
+          requires:
+            - C5-FF-78-2D-7A-6C
+      - taco:
+          requires:
+            - C5-FF-78-2D-7A-6C
+      - q2-canary:
+          requires:
+            - taco
+      - Pre-Beam-Soft:
+          requires:
+            - taco
+      - tweak-session:
+          requires:
+            - Pre-Beam-Soft
+      - GANWrapper:
+          requires:
+            - Pre-Beam-Soft
+      - v6-nightly1:
+          requires:
+            - GANWrapper
+      - deps-misc-pos-clip
+      - verify-staging-test-matrix:
+          requires:
+            - deps-misc-pos-clip
+      - SCOPE_TIMER_BACKUP_FORK_UUID:
+          requires:
+            - deps-misc-pos-clip
+      - q2-smoke:
+          requires:
+            - SCOPE_TIMER_BACKUP_FORK_UUID
+      - cleanup4:
+          requires:
+            - SCOPE_TIMER_BACKUP_FORK_UUID
+      - b-01:
+          requires:
+            - cleanup4
+      - checkouts_list:
+          requires:
+            - cleanup4
+      - package:
+          requires:
+            - checkouts_list
+      - BaseRatioVisitor:
+          requires:
+            - checkouts_list
+      - pr-v2:
+          requires:
+            - BaseRatioVisitor
+      - animate_alive_future:
+          requires:
+            - BaseRatioVisitor
+      - rip-it:
+          requires:
+            - animate_alive_future
+      - alicey:
+          requires:
+            - animate_alive_future
+      - q4-release:
+          requires:
+            - alicey
